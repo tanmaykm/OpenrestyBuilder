@@ -30,7 +30,6 @@ make install
 rm $prefix/bin/openresty 
 cd $prefix/bin/
 ln -fs ../nginx/sbin/nginx ./openresty
-
 """
 
 # These are the platforms we will build for by default, unless further
@@ -42,7 +41,7 @@ platforms = [
 
 # The products that we will ensure are always built
 products(prefix) = [
-    ExecutableProduct(prefix, "nginx", :nginx)
+    ExecutableProduct(prefix, "openresty", :openresty)
 ]
 
 # Dependencies that must be installed before this package can be built
