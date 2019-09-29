@@ -1,0 +1,39 @@
+language: julia
+os:
+  - linux
+julia:
+  - 1.0
+notifications:
+  email: false
+git:
+  depth: 99999999
+cache:
+  timeout: 1000
+  directories:
+    - downloads
+env:
+  global:
+    - BINARYBUILDER_DOWNLOADS_CACHE=downloads
+    - BINARYBUILDER_AUTOMATIC_APPLE=false
+sudo: required
+
+# Before anything else, get the latest versions of things
+before_script:
+  - julia -e 'using Pkg; pkg"add BinaryProvider"; pkg"add BinaryBuilder#master"; Pkg.build()'
+
+script:
+  - julia build_tarballs.jl
+
+
+deploy:
+    provider: releases
+    api_key:
+        # Note; this api_key is only valid for tanmaykm/OpenrestyBuilder; you need
+        # to make your own: https://docs.travis-ci.com/user/deployment/releases/
+        secure: 0x0AeM2NoilKH4dcdicGuJCeefQXcmbkSCJxW/YKpX5FCXDOjBS12cts1URym5PsGPH5rvO7JmS5YgBEhE3I/bVc4mV6gelAX1HPokAlxdBdzXmzp7TSPhwvsnD781peAmtbrpnu2AP8IOV3HCgPV3I9yjMwzefnBQBAUMUCnNwp76Eqa8SN7pCY0Q9CK/Z5y79/GA8/E58JaaqibuNePwzZ1+GIw+0jg5ezMoyaWNly/I3GYtzhTtbOTWQ5TyBSSXnW1/LebroWJYUyzi2b32W9qCsRE3Wv9ZdaQ9sYSX931PQfJSjBpJsBC66zKUGgHDQowYkoE1UZSersW11KVOqYhg4ShHjTlCbfnoWja0F7BgJUY5P9DUXS0pCfz6Hx7pj4ZRYmROPPMrhkgywuxroeOpOll2YjfVvO4D0q3ecP05FufMRFfR3TJ9z9gImAyc/9f4bCNFdNIDBpz+jaBaXmy8IdZHFLqyGMRUZil5qS/ogqHjmwPVh1KFx/urkku7TJQAMYuHa+N8m5EmELWUhjXq2vGWXXWs4qKUI6xS0j9WfRrmq0G7w7JtjGZVv98JTeIOY/DP8M8D12g0FeFSVcX6NlQzcQ0vz4ESaq7BVGbRnWZI14n+7Gfq1YLyV7e4gAEBXOGLMg4rWqO/sNIdPiK3dPHTAq5b3fQRQpIo0=
+    file_glob: true
+    file: products/*
+    skip_cleanup: true
+    on:
+        repo: tanmaykm/OpenrestyBuilder
+        tags: true
